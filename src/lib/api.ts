@@ -2,7 +2,7 @@ import type { MatchResult, LeaderboardSeason, MatchSummary, LeaderboardDetails }
 import { formatDuration } from './utils';
 
 const FACEIT_API_URL = 'https://open.faceit.com/data/v4';
-const API_KEY = '5ac3021a-ad61-4deb-b229-954376ad7a6c';
+const API_KEY = '31a0f009-6cde-4e0d-98ce-4c10b21e2714';
 const HUB_ID = 'bde68960-b86c-4798-a132-f3b0e716d19b';
 
 const headers = {

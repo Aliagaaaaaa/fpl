@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { fetchLeaderboards, fetchMatchHistory } from '@/lib/api';
 import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { MatchHistoryCard } from '@/components/MatchHistoryCard';
+import { HubSelector } from '@/components/HubSelector';
+import { useHub } from '@/contexts/HubContext';
 import { Loader2 } from 'lucide-react';
 import type { LeaderboardSeason, MatchSummary } from '@/types';
 
 const ITEMS_PER_PAGE = 20;
 
 export function MainMenu() {
+  const { currentHub } = useHub();
   const [leaderboards, setLeaderboards] = useState<LeaderboardSeason[]>([]);
   const [matches, setMatches] = useState<MatchSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,9 +19,14 @@ export function MainMenu() {
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
+    setLoading(true);
+    setOffset(0);
+    setMatches([]);
+    setLeaderboards([]);
+
     Promise.all([
-      fetchLeaderboards(),
-      fetchMatchHistory()
+      fetchLeaderboards(currentHub.id),
+      fetchMatchHistory(currentHub.id)
     ])
       .then(([leaderboardsData, matchesData]) => {
         setLeaderboards(leaderboardsData);
@@ -30,7 +38,7 @@ export function MainMenu() {
         setLoading(false);
         console.error('Error fetching data:', err);
       });
-  }, []);
+  }, [currentHub.id]);
 
   const handleLoadMore = async () => {
     if (loadingMore) return;
@@ -39,7 +47,7 @@ export function MainMenu() {
     const newOffset = offset + ITEMS_PER_PAGE;
     
     try {
-      const newMatches = await fetchMatchHistory(newOffset);
+      const newMatches = await fetchMatchHistory(currentHub.id, newOffset);
       setMatches(prevMatches => [...prevMatches, ...newMatches]);
       setOffset(newOffset);
     } catch (err) {
@@ -68,6 +76,7 @@ export function MainMenu() {
   return (
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-8">
+        <HubSelector />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <LeaderboardCard leaderboards={leaderboards} />
           <MatchHistoryCard 

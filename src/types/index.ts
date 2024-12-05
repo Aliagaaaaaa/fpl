@@ -83,3 +83,16 @@ export interface MatchSummary {
     };
   };
 }
+
+export interface Hub {
+  id: string;
+  name: string;
+  region: string;
+  enabled: boolean;
+}
+
+export interface HubContextType {
+  currentHub: Hub;
+  setCurrentHub: (hub: Hub) => void;
+  hubs: Hub[];
+}

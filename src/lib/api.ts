@@ -3,7 +3,6 @@ import { formatDuration } from './utils';
 
 const FACEIT_API_URL = 'https://open.faceit.com/data/v4';
 const API_KEY = '31a0f009-6cde-4e0d-98ce-4c10b21e2714';
-const HUB_ID = 'bde68960-b86c-4798-a132-f3b0e716d19b';
 
 const headers = {
   'Authorization': `Bearer ${API_KEY}`,
@@ -50,8 +49,8 @@ export async function fetchMatchStats(matchId: string): Promise<MatchResult> {
   };
 }
 
-export async function fetchLeaderboards(): Promise<LeaderboardSeason[]> {
-  const response = await fetch(`${FACEIT_API_URL}/leaderboards/hubs/${HUB_ID}`, { headers });
+export async function fetchLeaderboards(hubId: string): Promise<LeaderboardSeason[]> {
+  const response = await fetch(`${FACEIT_API_URL}/leaderboards/hubs/${hubId}`, { headers });
 
   if (!response.ok) {
     throw new Error('Failed to fetch leaderboards');
@@ -74,9 +73,9 @@ export async function fetchLeaderboardDetails(leaderboardId: string, offset = 0,
   return await response.json();
 }
 
-export async function fetchMatchHistory(offset = 0, limit = 20): Promise<MatchSummary[]> {
+export async function fetchMatchHistory(hubId: string, offset = 0, limit = 20): Promise<MatchSummary[]> {
   const response = await fetch(
-    `${FACEIT_API_URL}/hubs/${HUB_ID}/matches?type=past&offset=${offset}&limit=${limit}`, 
+    `${FACEIT_API_URL}/hubs/${hubId}/matches?type=past&offset=${offset}&limit=${limit}`, 
     { headers }
   );
 

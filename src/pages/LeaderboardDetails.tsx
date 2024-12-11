@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { fetchLeaderboardDetails } from '@/lib/api';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { ArrowLeft, Trophy, Loader2 } from 'lucide-react';
+import { CountryFlag } from '@/components/CountryFlag';
 import type { LeaderboardDetails } from '@/types';
 
 const ITEMS_PER_PAGE = 20;
@@ -112,11 +113,9 @@ export function LeaderboardDetails() {
                               className="w-8 h-8 rounded-full"
                             />
                           )}
-                          <div>
-                            <div className="font-medium">{item.player.nickname}</div>
-                            <div className="text-xs text-muted-foreground uppercase">
-                              {item.player.country}
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <CountryFlag countryCode={item.player.country} />
+                            <span className="font-medium">{item.player.nickname}</span>
                           </div>
                         </div>
                       </td>

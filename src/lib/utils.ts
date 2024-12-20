@@ -11,3 +11,7 @@ export function formatDuration(startTime: number, endTime: number): string {
   const seconds = durationInSeconds % 60;
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
+
+export function formatDate(timestamp: number): string {
+  return new Date(timestamp * 1000).toLocaleDateString();
+}

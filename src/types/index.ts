@@ -14,6 +14,15 @@ export interface Player {
   adr: number;
 }
 
+export interface MatchPlayer {
+  player_id: string;
+  nickname: string;
+  avatar: string;
+  game_player_id: string;
+  game_player_name: string;
+  game_skill_level: number;
+}
+
 export interface Team {
   name: string;
   score: number;
@@ -68,31 +77,12 @@ export interface MatchSummary {
     faction1: {
       name: string;
       score: number;
-      roster: Array<{
-        nickname: string;
-        avatar: string;
-      }>;
+      roster: MatchPlayer[];
     };
     faction2: {
       name: string;
       score: number;
-      roster: Array<{
-        nickname: string;
-        avatar: string;
-      }>;
+      roster: MatchPlayer[];
     };
   };
-}
-
-export interface Hub {
-  id: string;
-  name: string;
-  region: string;
-  enabled: boolean;
-}
-
-export interface HubContextType {
-  currentHub: Hub;
-  setCurrentHub: (hub: Hub) => void;
-  hubs: Hub[];
 }

@@ -74,35 +74,39 @@ export async function fetchLeaderboardDetails(leaderboardId: string, offset = 0,
 }
 
 export async function fetchMatchHistory(hubId: string, offset = 0, limit = 20): Promise<MatchSummary[]> {
-  const response = await fetch(
-    `${FACEIT_API_URL}/hubs/${hubId}/matches?type=past&offset=${offset}&limit=${limit}`, 
-    { headers }
-  );
+  const [pastMatches, liveMatches] = await Promise.all([
+    fetch(`${FACEIT_API_URL}/hubs/${hubId}/matches?type=past&offset=${offset}&limit=${limit}`, { headers })
+      .then(res => res.json())
+      .then(data => data.items),
+    fetch(`${FACEIT_API_URL}/hubs/${hubId}/matches?type=live&offset=0&limit=20`, { headers })
+      .then(res => res.json())
+      .then(data => data.items)
+  ]);
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch match history');
-  }
-
-  const data = await response.json();
-  return data.items
-    .filter((match: any) => match.status !== 'CANCELLED')
-    .map((match: any) => ({
-      match_id: match.match_id,
-      started_at: match.started_at,
-      finished_at: match.finished_at,
-      status: match.status,
-      map: match.voting?.map?.pick?.[0] || 'Unknown',
-      teams: {
-        faction1: {
-          name: match.teams.faction1.name,
-          score: match.results?.score?.faction1 || 0,
-          roster: match.teams.faction1.roster,
-        },
-        faction2: {
-          name: match.teams.faction2.name,
-          score: match.results?.score?.faction2 || 0,
-          roster: match.teams.faction2.roster,
-        },
+  const formatMatch = (match: any) => ({
+    match_id: match.match_id,
+    started_at: match.started_at,
+    finished_at: match.finished_at,
+    status: match.status,
+    map: match.voting?.map?.pick?.[0] || 'Unknown',
+    teams: {
+      faction1: {
+        name: match.teams.faction1.name,
+        score: match.results?.score?.faction1 || 0,
+        roster: match.teams.faction1.roster,
       },
-    }));
+      faction2: {
+        name: match.teams.faction2.name,
+        score: match.results?.score?.faction2 || 0,
+        roster: match.teams.faction2.roster,
+      },
+    },
+  });
+
+  const formattedLiveMatches = liveMatches.map(formatMatch);
+  const formattedPastMatches = pastMatches
+    .filter((match: any) => match.status !== 'CANCELLED')
+    .map(formatMatch);
+
+  return [...formattedLiveMatches, ...formattedPastMatches];
 }

@@ -12,9 +12,9 @@ export const HUBS = [
     enabled: true
   },
   {
-    id: 'eu-hub-id',
+    id: 'e7fbdd9e-4083-46ad-a9f1-2ae6b63536b4',
     name: 'EU Hub',
     region: 'Europe',
-    enabled: false
+    enabled: true
   }
 ];

@@ -30,6 +30,18 @@ export interface Team {
   side: 'CT' | 'T';
 }
 
+export interface Hub {
+  id: string;
+  name: string;
+  region: string;
+  enabled: boolean;
+}
+export interface HubContextType {
+  currentHub: Hub;
+  setCurrentHub: (hub: Hub) => void;
+  hubs: Hub[];
+}
+
 export interface MatchResult {
   teams: [Team, Team];
   map: string;
@@ -85,4 +97,17 @@ export interface MatchSummary {
       roster: MatchPlayer[];
     };
   };
+}
+
+export interface TopPlayer {
+  player_id: string;
+  nickname: string;
+  country: string;
+  position: number;
+  faceit_elo: number;
+  game_skill_level: number;
+}
+
+export interface QualifyingPlayer extends TopPlayer {
+  willQualify: boolean;
 }

@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface MatchScoreProps {
   score1: number;
   score2: number;

@@ -1,4 +1,3 @@
-import React from 'react';
 import type { MatchSummary } from '@/types';
 import { TeamSection } from './TeamSection';
 import { MatchScore } from './MatchScore';

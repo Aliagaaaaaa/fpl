@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Clock } from 'lucide-react';
 import type { MatchSummary } from '@/types';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Radio } from 'lucide-react';
 import type { MatchSummary } from '@/types';
 import { MatchTeams } from './MatchTeams';

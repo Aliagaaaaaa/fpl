@@ -1,4 +1,4 @@
-import type { MatchResult, LeaderboardSeason, MatchSummary, LeaderboardDetails } from '../types';
+import type { MatchResult, LeaderboardSeason, MatchSummary, LeaderboardDetails,TopPlayer } from '../types';
 import { formatDuration } from './utils';
 
 const FACEIT_API_URL = 'https://open.faceit.com/data/v4';
@@ -8,6 +8,34 @@ const headers = {
   'Authorization': `Bearer ${API_KEY}`,
   'Accept': 'application/json',
 };
+
+async function handleResponse<T>(response: Response): Promise<T> {
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+  }
+  const data = await response.json();
+  return data;
+}
+
+export async function fetchTopPlayers(): Promise<TopPlayer[]> {
+  try {
+    const [response1, response2] = await Promise.all([
+      fetch(`${FACEIT_API_URL}/rankings/games/cs2/regions/SA?offset=0&limit=100`, { headers }),
+      fetch(`${FACEIT_API_URL}/rankings/games/cs2/regions/SA?offset=100&limit=100`, { headers })
+    ]);
+
+    const [data1, data2] = await Promise.all([
+      handleResponse<{ items: TopPlayer[] }>(response1),
+      handleResponse<{ items: TopPlayer[] }>(response2)
+    ]);
+
+    return [...(data1.items || []), ...(data2.items || [])];
+  } catch (error) {
+    console.error('Error fetching top players:', error);
+    return [];
+  }
+}
 
 export async function fetchMatchStats(matchId: string): Promise<MatchResult> {
   const [statsResponse, matchResponse] = await Promise.all([

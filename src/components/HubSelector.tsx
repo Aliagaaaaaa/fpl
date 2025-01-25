@@ -1,4 +1,3 @@
-import React from 'react';
 import { useHub } from '@/contexts/HubContext';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { Globe2 } from 'lucide-react';

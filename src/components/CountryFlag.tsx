@@ -1,4 +1,3 @@
-import React from 'react';
 import * as flags from 'country-flag-icons/react/3x2';
 
 interface CountryFlagProps {
